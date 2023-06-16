@@ -1,8 +1,21 @@
 "use client";
 import React from "react";
+import { useForm, Controller } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 
 const FormGenerator = ({ data }: any) => {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (formData: any) => {
+    // Manipulate the formData object as needed
+    console.log(formData);
+  };
+
   const renderFormField = (item: any) => {
     switch (item.field_type) {
       case "text":
@@ -11,9 +24,8 @@ const FormGenerator = ({ data }: any) => {
           <input
             type={item.field_type}
             id={item.field}
-            name={item.field}
+            {...register(item.field)}
             placeholder={item.label}
-            value={item.value}
             readOnly={!item.flg_editable}
             className="border rounded-md p-2 mb-2 w-full"
           />
@@ -23,7 +35,7 @@ const FormGenerator = ({ data }: any) => {
           <input
             type="checkbox"
             id={item.field}
-            name={item.field}
+            {...register(item.field)}
             checked={item.value}
             className="mr-2"
             readOnly={!item.flg_editable}
@@ -33,10 +45,11 @@ const FormGenerator = ({ data }: any) => {
         return (
           <select
             id={item.field}
-            name={item.field}
-            value={item.value}
+            {...register(item.field)}
             className="border rounded-md p-2 mb-2 w-full"
+            defaultValue={""}
           >
+            <option value="">{item.placeholder}</option>
             {item.options.map((option: any) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -49,49 +62,42 @@ const FormGenerator = ({ data }: any) => {
           <input
             type="date"
             id={item.field}
-            name={item.field}
-            value={item.value}
+            {...register(item.field)}
             readOnly={!item.flg_editable}
             className="border rounded-md p-2 mb-2 w-full"
           />
         );
       case "cellphone":
-        return (
-          <PatternFormat
-            format="(##) #####-####"
-            mask="_"
-            id={item.field}
-            name={item.field}
-            placeholder={item.label}
-            value={item.value}
-            readOnly={!item.flg_editable}
-            className="border rounded-md p-2 mb-2 w-full"
-          />
-        );
       case "cpf":
         return (
-          <PatternFormat
-            format="###.###.###-##"
-            mask="_"
-            id={item.field}
+          <Controller
             name={item.field}
-            placeholder={item.placeholder}
-            readOnly={!item.flg_editable}
-            className="border rounded-md p-2 mb-2 w-full"
+            control={control}
+            render={({ field }) => (
+              <PatternFormat
+                onValueChange={(value) => field.onChange(value.floatValue)}
+                format={item.format ? item.format : null}
+                mask="_"
+                id={item.field}
+                placeholder={item.label}
+                readOnly={!item.flg_editable}
+                className="border rounded-md p-2 mb-2 w-full"
+              />
+            )}
           />
         );
+
       default:
         return null;
     }
   };
 
   return (
-    <form className="w-full  mx-auto">
+    <form className="w-full  mx-auto" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-wrap -mx-2  flex-row justify-between">
         {data.map((item: any) => (
           <>
             <div
-              key={item.id}
               className={`mb-4 w-1/2 px-2 flex flex-row justify-between items-center`}
             >
               <label
@@ -108,6 +114,12 @@ const FormGenerator = ({ data }: any) => {
             {item.break_line && <div className="w-full"></div>}
           </>
         ))}
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Submit
+        </button>
       </div>
     </form>
   );

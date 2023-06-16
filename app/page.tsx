@@ -10,10 +10,11 @@ export default function Home() {
       value: "",
       field_type: "cpf",
       options: [],
-      flg_editable: false,
+      flg_editable: true,
       flg_required: false,
       break_line: false,
       placeholder: "111.111.111-11",
+      format: "###.###.###-##",
     },
     {
       id: 20,
@@ -62,6 +63,7 @@ export default function Home() {
       flg_editable: true,
       flg_required: false,
       break_line: false,
+      format: "(##) #####-####",
     },
     {
       id: 22,
@@ -82,8 +84,6 @@ export default function Home() {
   ];
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 ">
-      <p className="text-emerald-600 align-middle text-lg">init</p>
-
       <FormGenerator data={formData} />
     </main>
   );
