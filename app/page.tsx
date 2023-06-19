@@ -1,7 +1,22 @@
-import FormGenerator from "./Components/FormGenerator";
+import FormGenerator from "./Components/shared/FormGenerator";
+import Modal from "./Components/shared/Modal";
 
+export interface FormDataType {
+  id: number;
+  order: number;
+  field: string;
+  label: string;
+  value: string;
+  field_type: string;
+  options: any[]; // Change `any` to the type of your options array if applicable
+  flg_editable: boolean;
+  flg_required: boolean;
+  break_line: boolean;
+  placeholder?: string;
+  format?: string;
+}
 export default function Home() {
-  const formData = [
+  const formData: FormDataType[] = [
     {
       id: 19,
       order: 1,
@@ -46,7 +61,7 @@ export default function Home() {
       field: "email",
       label: "Email",
       value: "",
-      field_type: "text",
+      field_type: "email",
       options: [],
       flg_editable: true,
       flg_required: false,
@@ -82,9 +97,13 @@ export default function Home() {
       break_line: false,
     },
   ];
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 ">
       <FormGenerator data={formData} />
+      <Modal isOpen={false}>
+        <h1>opa</h1>{" "}
+      </Modal>
     </main>
   );
 }
